@@ -1,6 +1,6 @@
 # 🛡️ Go AppSec Pipeline: From Vulnerable to Secure
 
-[![CI/CD Security Pipeline](https://github.com/yourusername/repo-name/actions/workflows/security.yml/badge.svg)](https://github.com/yourusername/repo-name/actions)
+[![CI/CD Security Pipeline](https://github.com/pinheiro2/appsec-pipeline/actions/workflows/security.yml/badge.svg)](https://github.com/yourusername/repo-name/actions)
 [![Go Version](https://img.shields.io/badge/Go-1.21+-00ADD8?style=flat&logo=go)](https://go.dev/)
 
 ## 📌 Project Overview
