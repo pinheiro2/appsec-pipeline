@@ -1,0 +1,39 @@
+# Compiled Object files, Static and Dynamic libs (Shared Objects)
+*.o
+*.a
+*.so
+
+# Architecture specific folders/files
+_obj
+_test
+_testmain.go
+
+# Folders for OS and IDE specific files
+.idea/
+.vscode/
+.DS_Store
+*.swp
+
+# Go workspace files (used for local multi-module development)
+go.work
+go.work.sum
+
+# Compiled binaries
+*.exe
+*.exe~
+*.dll
+*.dylib
+/main
+/appsec-go-lab
+bin/
+
+# Test binary, test logs, and coverage reports
+*.test
+*.out
+coverage.out
+coverage.html
+coverage.txt
+
+# Environment variables (Crucial for AppSec - never commit local secrets!)
+.env
+.env.local
