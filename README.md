@@ -48,7 +48,7 @@ The GitHub Actions pipeline is defined in `.github/workflows/security-pipeline.y
 ### Running the API
 ```bash
 # 1. Clone the repository
-git clone [https://github.com/yourusername/appsec-pipeline.git](https://github.com/yourusername/appsec-pipeline.git)
+git clone [https://github.com/pinheiro2/appsec-pipeline.git](https://github.com/pinheiro2/appsec-pipeline.git)
 cd appsec-pipeline
 
 # 2. Create a local environment file with a dummy secret
@@ -58,3 +58,17 @@ echo "JWT_SECRET=my-local-dev-secret-key" > .env
 export $(cat .env | xargs) && go run main.go
 
 # The API will be available at http://localhost:8080
+```
+
+### Testing the Endpoints (Locally)
+
+```bash
+# Check application health
+curl -s http://localhost:8080/health
+
+# Test Authorized Access (Simulating User ID 1)
+curl -H "X-User-Role: user" -H "X-User-Id: 1" "http://localhost:8080/api/user/profile?id=1"
+
+# Test Blocked BOLA Attack (User 1 attempting to read User 3)
+curl -H "X-User-Role: user" -H "X-User-Id: 1" "http://localhost:8080/api/user/profile?id=3"
+```
