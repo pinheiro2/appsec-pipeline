@@ -6,12 +6,19 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"os"
 
 	_ "modernc.org/sqlite"
 )
 
-// Vulnerability 1: Hardcoded sensitive secret / JWT signing key (OWASP A07 / CWE-798)
-const HardcodedJWTSecret = "SuperSecretAdminKey12345!@#"
+func getJWTSecret() string {
+    secret := os.Getenv("JWT_SECRET")
+    if secret == "" {
+        log.Fatal("SECURITY ERROR: JWT_SECRET environment variable is not set. Service refusing to start.")
+    }
+    return secret
+}
+
 
 type User struct {
 	ID       int    `json:"id"`
@@ -137,6 +144,9 @@ func healthHandler(w http.ResponseWriter, r *http.Request) {
 }
 
 func main() {
+	jwtSecret := getJWTSecret()
+    _ = jwtSecret
+	
 	initDB()
 
 	mux := http.NewServeMux()
