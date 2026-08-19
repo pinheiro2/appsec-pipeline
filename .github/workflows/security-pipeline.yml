@@ -43,6 +43,11 @@ jobs:
     name: OWASP ZAP DAST
     runs-on: ubuntu-latest
     #needs: sast-scan 
+    permissions:
+      contents: read
+      security-events: write
+      actions: read
+      issues: write
 
     steps:
       - name: Checkout repository
