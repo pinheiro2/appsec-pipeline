@@ -68,10 +68,10 @@ func searchUsersHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	// VULNERABLE: Direct string formatting into SQL query
-	rawQuery := fmt.Sprintf("SELECT id, username, email, role, balance FROM users WHERE username = '%s'", queryUser)
+	secureQuery := "SELECT id, username, email, role, balance FROM users WHERE username = ?"
+
 	
-	rows, err := db.Query(rawQuery)
+	rows, err := db.Query(secureQuery, queryUser)
 	if err != nil {
 		http.Error(w, fmt.Sprintf("Database query error: %v", err), http.StatusInternalServerError)
 		return
