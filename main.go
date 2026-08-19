@@ -99,31 +99,36 @@ func searchUsersHandler(w http.ResponseWriter, r *http.Request) {
 	json.NewEncoder(w).Encode(results)
 }
 
-// Vulnerability 3: Broken Object Level Authorization (BOLA/IDOR) (OWASP A01 / CWE-639)
-// Endpoint: GET /api/user/profile?id=...
 func getUserProfileHandler(w http.ResponseWriter, r *http.Request) {
 	if r.Method != http.MethodGet {
 		http.Error(w, "Method not allowed", http.StatusMethodNotAllowed)
 		return
 	}
 
-	// Simulated authentication: header "X-User-Role"
+	// Simulated authentication: headers "X-User-Role" and "X-User-Id"
 	roleHeader := r.Header.Get("X-User-Role")
-	if roleHeader == "" {
-		http.Error(w, "Unauthorized: missing X-User-Role header", http.StatusUnauthorized)
+	callerID := r.Header.Get("X-User-Id") // Represents the ID from a verified JWT
+	
+	if roleHeader == "" || callerID == "" {
+		http.Error(w, "Unauthorized: missing authentication headers", http.StatusUnauthorized)
 		return
 	}
 
-	userID := r.URL.Query().Get("id")
-	if userID == "" {
+	requestedUserID := r.URL.Query().Get("id")
+	if requestedUserID == "" {
 		http.Error(w, "Query param 'id' is required", http.StatusBadRequest)
 		return
 	}
 
-	// VULNERABLE: Although parameterized, it lacks object-level authorization checks.
-	// Any authenticated user can read any other user's full balance and data simply by enumerating ?id=
+	// SECURE: The BOLA / IDOR Fix
+	// If you are not an admin, you can only access the ID that matches your own callerID
+	if roleHeader != "admin" && callerID != requestedUserID {
+		http.Error(w, "Forbidden: you do not have permission to access this profile", http.StatusForbidden)
+		return
+	}
+
 	var u User
-	err := db.QueryRow("SELECT id, username, email, role, balance FROM users WHERE id = ?", userID).
+	err := db.QueryRow("SELECT id, username, email, role, balance FROM users WHERE id = ?", requestedUserID).
 		Scan(&u.ID, &u.Username, &u.Email, &u.Role, &u.Balance)
 
 	if err == sql.ErrNoRows {
