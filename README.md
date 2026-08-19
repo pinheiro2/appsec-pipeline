@@ -43,7 +43,7 @@ The GitHub Actions pipeline is defined in `.github/workflows/security-pipeline.y
 ## 🚀 How to Run Locally
 
 ### Prerequisites
-*   Go 1.22+
+*   Go 1.25+
 
 ### Running the API
 ```bash
