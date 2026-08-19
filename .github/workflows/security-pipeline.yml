@@ -1,0 +1,35 @@
+name: DevSecOps Pipeline
+
+on:
+  workflow_dispatch: 
+
+jobs:
+  sast-scan:
+    name: Semgrep SAST
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1
+
+      - name: Setup Python
+        uses: actions/setup-python@5fda3b95a4ea91299a34e894583c3862153e4b97
+        with:
+          python-version: '3.11'
+
+      - name: Install Semgrep OSS
+        run: pip install semgrep
+
+      - name: Run Semgrep Scan
+        # continue-on-error keeps the pipeline Green even if vulns are found
+        continue-on-error: true
+        run: >
+          semgrep scan 
+          --config="p/default" 
+          --config="p/golang" 
+          --config="p/owasp-top-ten"
+          --sarif --output=semgrep-results.sarif
+
+      - name: Upload SARIF to GitHub Security Tab
+        uses: github/codeql-action/upload-sarif@v3
+        with:
+          sarif_file: semgrep-results.sarif
