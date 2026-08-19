@@ -72,9 +72,9 @@ jobs:
           # Quick local curl to verify it's responding
           curl -s http://localhost:8080/health
 
-      - name: Run OWASP ZAP Baseline Scan
+      - name: Run OWASP ZAP API Scan
         uses: zaproxy/action-baseline@de8ad967d3548d44ef623df22cf95c3b0baf8b25 # v0.15.0
         with:
-          target: 'http://localhost:8080'
-          
+          target: '.github/config_files/openapi.yaml'
+          format: 'openapi'
           fail_action: false

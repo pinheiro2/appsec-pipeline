@@ -1,0 +1,38 @@
+openapi: 3.0.0
+info:
+  title: Vulnerable Go REST API
+  version: 1.0.0
+servers:
+  - url: http://localhost:8080
+
+paths:
+  /api/users/search:
+    get:
+      summary: Search for a user by username
+      parameters:
+        - in: query
+          name: username
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
+
+  /api/user/profile:
+    get:
+      summary: Fetch user profile by ID
+      parameters:
+        - in: query
+          name: id
+          required: true
+          schema:
+            type: integer
+        - in: header
+          name: X-User-Role
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Successful response
